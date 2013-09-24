@@ -1,0 +1,23 @@
+here=File.dirname(__FILE__)
+$home=File.expand_path("#{here}/../..")
+require "#{$home}/rakefile.rb"
+
+desc "Build everything."
+task :all => [:buildGui, :build_python] 
+
+
+desc "Clean everything."
+task :clean => [:clean_python] 
+
+desc "Run the test cases."
+python_task :partial_tests  do
+  python("/usr/bin/nosetests -v -s #{$pbd}/forklift/test/forklift_test.py")  
+end
+
+desc "cost function browser for forklift"
+python_task :state_action_browser => [:buildGui] do
+    python("#{$pbd}/diapers/gui/state_action_browser.py " +
+           "--state-type=diapers " +
+           ""
+           )
+end
