@@ -1,0 +1,8 @@
+here=File.dirname(__FILE__)
+$home=File.expand_path("#{here}/../..")
+require "#{$home}/rakefile.rb"
+task :all
+
+task :setup do
+  sh "cd 3rdParty/slu_core/ && rake setup BUILD_PREFIX=#{$build_dir}"
+end

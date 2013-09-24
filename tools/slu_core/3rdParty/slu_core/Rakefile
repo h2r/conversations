@@ -1,0 +1,11 @@
+file "slu_core" do
+  sh "git clone http://people.csail.mit.edu/stefie10/slu/repositories/slu_core.git"
+end
+
+task :setup => ["slu_core"] do
+  sh "cd slu_core && make BUILD_PREFIX=#{ENV['BUILD_PREFIX']}"
+end
+
+task :clean do
+  sh "rm -rf slu_core"
+end
