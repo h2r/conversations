@@ -1,7 +1,7 @@
 ENV['SLU_HOME'] = $home
 
-if ENV['BUILD_DIR']
-  $build_dir = ENV['BUILD_DIR']
+if ENV['BUILD_PREFIX'] and ENV['BUILD_PREFIX'].strip() != ""
+  $build_dir = ENV['BUILD_PREFIX']
 else
   $build_dir = "#{$home}/build"
 end
@@ -206,13 +206,8 @@ task :everything do
   end
   subdirs = `find #{$home}/tools/* #{build_cmd} -printf "%H\n" | sort -u`.split("\n")
   subdirs.each do |f|
-      sh "cd #{f} && rake BUILD_PREFIX=#{$build_dir}"
+      sh "cd #{f} && rake all BUILD_DIR=#{$build_dir}"
   end
-
-
-  sh "cd #{$home}/tools/slu_core/3rdParty/slu_core/slu_core && rake everything BUILD_PREFIX=#{$build_dir}"   
-
-
   sh "touch #{$last_build}"
 end
 
@@ -227,4 +222,12 @@ def python_task(*args, &block)
   Rake::Task.define_task(*args, &block)
 end
 
+
+task :build_python do
+  make_python_targets(:do_build_python, FileList["python/**/*.py"])
+  Rake::Task["do_build_python"].invoke
+end
+
+
+make_class_targets(:build_java, FileList["java/**/*.java"])
 
